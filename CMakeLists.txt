@@ -1,45 +1,64 @@
-INCLUDE(CheckFunctionExists)
-INCLUDE(CheckLibraryExists)
+## GENERAL ##
 
-IF(ASCIIDOC_EXECUTABLE)
-  ADD_DEFINITIONS(-DASCIIDOC_EXECUTABLE="${ASCIIDOC_EXECUTABLE}")
-ENDIF(ASCIIDOC_EXECUTABLE)
+cmake_minimum_required(VERSION 2.8)
+set(WT_INSTALL_DIR $ENV{WT_INSTALL_DIR}) #provide wt install directory in environment var
+#set(WT_INSTALL_DIR "/path/to/wt-install-dir") #alternatively, provide it here
+include_directories(${WT_INSTALL_DIR}/include)
+link_directories(${WT_INSTALL_DIR}/lib) 
 
-WT_ADD_EXAMPLE(blog.wt
-  model/BlogSession.C
-  model/BlogUserDatabase.C
-  model/Post.C
-  model/Comment.C
-  model/User.C
- model/Tag.C
-  model/Token.C
-  view/PostView.C
-  view/CommentView.C
-  view/BlogLoginWidget.C
-  view/BlogView.C
-  view/EditUsers.C
-  asciidoc/asciidoc.C
-  BlogRSSFeed.C
-  blog.C
+## PROJECT SPECIFIC ##
+
+PROJECT(BLOG)
+
+## SOURCES ##
+
+file(GLOB sources *.c* asciidoc/*.c* model/*.c* view/*.c*)
+file(GLOB_RECURSE  headers *.h *.hpp) # optional, for use in generated IDE projects
+
+## TARGET ##
+
+set(TARGET blog.wt)
+add_executable(${TARGET} ${sources} ${headers})
+
+## LINKING ##
+
+set(WT_CONNECTOR "wthttp" CACHE STRING "Connector used (wthttp or wtfcgi)")
+set(CMAKE_BUILD_TYPE Debug CACHE STRING " Debug Release RelWithDebInfo MinSizeRel" FORCE )
+
+target_link_libraries(
+  ${TARGET}
+  optimized ${WT_CONNECTOR} debug ${WT_CONNECTOR}d
+  optimized wt              debug wtd
+  optimized wtdbo           debug wtdbod
+  optimized wtdbosqlite3    debug wtdbosqlite3d
 )
 
-TARGET_LINK_LIBRARIES(blog.wt wtdbo wtdbosqlite3)
+## IDE and CONVENIENCE ##
+
+source_group(sources FILES ${sources}) # for some IDE's (MSVC), to show files grouped
+source_group(headers FILES ${headers})
+
+## TODO ##
+
+# ASCIIDOC #
+
+# CRYPT #
 
 # Test whether crypt(3) is provided by libc. If it's not, check if
 # libcrypt exists and if it provides crypt(3).
-CHECK_FUNCTION_EXISTS(crypt CRYPT_EXISTS)
-IF(NOT CRYPT_EXISTS)
-  CHECK_LIBRARY_EXISTS(crypt crypt "" CRYPT_LIB_EXISTS)
-  IF(CRYPT_LIB_EXISTS)
-    SET(CMAKE_REQUIRED_LIBRARIES "crypt")
-    CHECK_FUNCTION_EXISTS(crypt CRYPT_EXISTS)
-  ENDIF(CRYPT_LIB_EXISTS)
-ENDIF(NOT CRYPT_EXISTS)
 
-IF(CRYPT_LIB_EXISTS)
-  TARGET_LINK_LIBRARIES(blog.wt crypt)
-ENDIF(CRYPT_LIB_EXISTS)
+#INCLUDE(CheckFunctionExists)
+#INCLUDE(CheckLibraryExists)
 
-INCLUDE_DIRECTORIES(
-  ${WT_SOURCE_DIR}/src
-)
+#CHECK_FUNCTION_EXISTS(crypt CRYPT_EXISTS)
+#IF(NOT CRYPT_EXISTS)
+#  CHECK_LIBRARY_EXISTS(crypt crypt "" CRYPT_LIB_EXISTS)
+#  IF(CRYPT_LIB_EXISTS)
+#    SET(CMAKE_REQUIRED_LIBRARIES "crypt")
+#    CHECK_FUNCTION_EXISTS(crypt CRYPT_EXISTS)
+#  ENDIF(CRYPT_LIB_EXISTS)
+#ENDIF(NOT CRYPT_EXISTS)
+
+#IF(CRYPT_LIB_EXISTS)
+#  TARGET_LINK_LIBRARIES(${TARGET} crypt)
+#ENDIF(CRYPT_LIB_EXISTS)
