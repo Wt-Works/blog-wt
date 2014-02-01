@@ -12,8 +12,8 @@ PROJECT(BLOG)
 
 ## SOURCES ##
 
-file(GLOB sources *.c* asciidoc/*.c* model/*.c* view/*.c*)
-file(GLOB_RECURSE  headers *.h *.hpp) # optional, for use in generated IDE projects
+file(GLOB_RECURSE sources src/*.c*)
+file(GLOB_RECURSE headers src/*.h src/*.hpp) # optional, for use in generated IDE projects
 
 ## TARGET ##
 
