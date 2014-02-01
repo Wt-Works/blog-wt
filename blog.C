@@ -15,9 +15,7 @@
 #include "BlogRSSFeed.h"
 
 using namespace Wt;
-
-//static const char *FeedUrl = "/Test/blog/feed/";
-//static const char *BlogUrl = "/Test/blog";
+using  Wt::Dbo::SqlConnectionPool;
 
 static const char *FeedUrl = "/blog/feed/";
 static const char *BlogUrl = "/blog";
@@ -25,16 +23,14 @@ static const char *BlogUrl = "/blog";
 class BlogApplication : public WApplication
 {
 public:
-  BlogApplication(const WEnvironment& env, Wt::Dbo::SqlConnectionPool& blogDb) 
-    : WApplication(env)
+  BlogApplication(const WEnvironment& env, SqlConnectionPool& blogDb) : WApplication(env)
   {
     root()->addWidget(new BlogView("/", blogDb, FeedUrl));
     useStyleSheet("css/blogexample.css");
   }
 };
 
-WApplication *createApplication(const WEnvironment& env,
-				Wt::Dbo::SqlConnectionPool *blogDb)
+WApplication *createApplication(const WEnvironment& env, SqlConnectionPool *blogDb)
 {
   return new BlogApplication(env, *blogDb);
 }
@@ -48,19 +44,16 @@ int main(int argc, char **argv)
 
     BlogSession::configureAuth();
 
-    Wt::Dbo::SqlConnectionPool *blogDb
-      = BlogSession::createConnectionPool(server.appRoot() + "blog.db");
+    SqlConnectionPool *blogDb = BlogSession::createConnectionPool(server.appRoot() + "blog.db");
 
     BlogRSSFeed rssFeed(*blogDb, "Wt blog example", "", "It's just an example.");
 
     server.addResource(&rssFeed, FeedUrl);
     //When the blog application is deployed in ISAPI on the path "/blog"
     //the resources (css+images) are not fetched correctly
-    server.addEntryPoint(Application,
-			 boost::bind(&createApplication, _1, blogDb), BlogUrl);    
+    server.addEntryPoint(Application, boost::bind(&createApplication, _1, blogDb), BlogUrl);
 
-    std::cerr << "\n\n -- Warning: Example is deployed at '"
-      << BlogUrl << "'\n\n";
+    std::cerr << "\n\n -- Warning: Example is deployed at '" << BlogUrl << "'\n\n";
 
     if (server.start()) {
       WServer::waitForShutdown();
