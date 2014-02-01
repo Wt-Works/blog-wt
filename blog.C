@@ -40,7 +40,7 @@ int main(int argc, char **argv)
   try {
     WServer server(argv[0]);
 
-    server.setServerConfiguration(argc, argv, WTHTTP_CONFIGURATION);
+    server.setServerConfiguration(argc, argv, "./wthttpd");
 
     BlogSession::configureAuth();
 
