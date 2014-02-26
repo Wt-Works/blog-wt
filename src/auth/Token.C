@@ -5,7 +5,7 @@
  */
 
 #include "Token.h"
-#include "User.h"
+#include "../model/User.h"
 
 #include <Wt/Dbo/Impl>
 

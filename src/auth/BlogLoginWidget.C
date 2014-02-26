@@ -11,7 +11,7 @@
 #include <Wt/Auth/RegistrationWidget>
 #include "BlogLoginWidget.h"
 #include "../model/BlogSession.h"
-#include "../model/Token.h"
+#include "Token.h"
 #include "../model/User.h"
 
 using namespace Wt;
