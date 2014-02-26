@@ -15,6 +15,7 @@
 #include "../model/User.h"
 
 using namespace Wt;
+using Auth::AuthModel;
 
 BlogLoginWidget::BlogLoginWidget(BlogSession& session,
 				 const std::string& basePath,
@@ -23,9 +24,7 @@ BlogLoginWidget::BlogLoginWidget(BlogSession& session,
 {
   setInline(true);
 
-  Auth::AuthModel *model
-    = new Auth::AuthModel(session.passwordAuth()->baseAuth(),
-			  session.users(), this);
+  AuthModel *model = new AuthModel(session.passwordAuth()->baseAuth(), session.users(), this);
   model->addPasswordAuth(session.passwordAuth());
   model->addOAuth(session.oAuth());
 
@@ -47,8 +46,7 @@ void BlogLoginWidget::createLoginView()
   WLineEdit *password = resolve<WLineEdit *>("password");
   password->setEmptyText("password");
   password->setToolTip("password");
-  password->enterPressed().connect(this,
-				   &BlogLoginWidget::attemptPasswordLogin);
+  password->enterPressed().connect(this, &BlogLoginWidget::attemptPasswordLogin);
 }
 
 void BlogLoginWidget::createLoggedInView()

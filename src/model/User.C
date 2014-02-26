@@ -7,7 +7,7 @@
 #include "Comment.h"
 #include "Post.h"
 #include "Tag.h"
-#include "Token.h"
+#include "../auth/Token.h"
 
 #include <Wt/Dbo/Impl>
 

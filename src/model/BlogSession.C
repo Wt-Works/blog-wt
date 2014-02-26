@@ -8,7 +8,7 @@
 #include "Comment.h"
 #include "Post.h"
 #include "Tag.h"
-#include "Token.h"
+#include "../auth/Token.h"
 #include "User.h"
 #include "../asciidoc/asciidoc.h"
 

@@ -7,13 +7,13 @@
 #include "PostView.h"
 #include "BlogView.h"
 #include "EditUsers.h"
-#include "BlogLoginWidget.h"
+#include "../auth/BlogLoginWidget.h"
 
 #include "../model/BlogSession.h"
 #include "../model/Comment.h"
 #include "../model/Post.h"
 #include "../model/Tag.h"
-#include "../model/Token.h"
+#include "../auth/Token.h"
 #include "../model/User.h"
 
 #include <Wt/WAnchor>
