@@ -14,11 +14,12 @@ PROJECT(BLOG)
 
 file(GLOB_RECURSE sources src/*.c*)
 file(GLOB_RECURSE headers src/*.h src/*.hpp) # optional, for use in generated IDE projects
+#file(GLOB divers *.*)
 
 ## TARGET ##
 
 set(TARGET blog.wt)
-add_executable(${TARGET} ${sources} ${headers})
+add_executable(${TARGET} ${sources} ${headers} ${divers})
 
 ## LINKING ##
 
