@@ -14,7 +14,7 @@
 #include "model/Post.h"
 #include "model/Comment.h"
 #include "model/Tag.h"
-#include "model/Token.h"
+#include "auth/Token.h"
 
 namespace dbo = Wt::Dbo;
 

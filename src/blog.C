@@ -9,7 +9,7 @@
 #include <Wt/Dbo/SqlConnectionPool>
 
 #include "model/BlogSession.h"
-#include "model/Token.h"
+#include "auth/Token.h"
 #include "model/User.h"
 #include "view/BlogView.h"
 #include "BlogRSSFeed.h"
