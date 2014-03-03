@@ -14,7 +14,15 @@
 #include "view/BlogView.h"
 #include "BlogRSSFeed.h"
 
-using namespace Wt;
+#include "0/WServer.h"
+
+
+using Wt::WApplication;
+using Wt::WEnvironment;
+using Wt::Application;
+//using Wt::WServer;
+using Ma::WServer;
+
 using  Wt::Dbo::SqlConnectionPool;
 
 static const char *FeedUrl = "/blog/feed/";
