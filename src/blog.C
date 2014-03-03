@@ -54,10 +54,8 @@ int main(int argc, char **argv)
     SqlConnectionPool *blogDb = BlogSession::createConnectionPool(server.appRoot() + "blog.db");
 
     BlogRSSFeed rssFeed(*blogDb, "Wt blog example", "", "It's just an example.");
-
     server.addResource(&rssFeed, FeedUrl);
-    //When the blog application is deployed in ISAPI on the path "/blog"
-    //the resources (css+images) are not fetched correctly
+
     server.addEntryPoint(Application, boost::bind(&createApplication, _1, blogDb), BlogUrl);
 
     cerr << "\n\n -- Warning: Example is deployed at '" << BlogUrl << "'\n\n";
