@@ -1,7 +1,6 @@
 /*
- * Copyright (C) 2008 Emweb bvba, Kessel-Lo, Belgium.
+ * Copyright (C) 2014 Ilias Lazaridis (info@lazaridis.com)
  *
- * See the LICENSE file for terms of use.
  */
 
 #include <Wt/WServer>

@@ -1,8 +1,6 @@
-// This may look like C code, but it's really -*- C++ -*-
 /*
- * Copyright (C) 2009 Emweb bvba, Kessel-Lo, Belgium.
+ * Copyright (C) 2014 Ilias Lazaridis (info@lazaridis.com)
  *
- * See the LICENSE file for terms of use.
  */
 #ifndef MA_WSERVER_H_
 #define MA_WSERVER_H_
@@ -25,6 +23,14 @@ public:
         : Wt::WServer(wtApplicationPath, wtConfigurationFile)
     {
 
+    }
+
+    void run()
+    {
+        if (start()) {
+          WServer::waitForShutdown();
+          stop();
+        }
     }
 
 };
