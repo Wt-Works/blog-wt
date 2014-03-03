@@ -5,7 +5,7 @@
  */
 #include <Wt/WApplication>
 #include <Wt/WContainerWidget>
-#include <Wt/WServer>
+//#include <Wt/WServer>
 #include <Wt/Dbo/SqlConnectionPool>
 
 #include "model/BlogSession.h"
@@ -16,6 +16,7 @@
 
 #include "0/WServer.h"
 
+using std::cerr;
 
 using Wt::WApplication;
 using Wt::WEnvironment;
@@ -59,15 +60,17 @@ int main(int argc, char **argv)
     //the resources (css+images) are not fetched correctly
     server.addEntryPoint(Application, boost::bind(&createApplication, _1, blogDb), BlogUrl);
 
-    std::cerr << "\n\n -- Warning: Example is deployed at '" << BlogUrl << "'\n\n";
+    cerr << "\n\n -- Warning: Example is deployed at '" << BlogUrl << "'\n\n";
 
     server.run();
 
     delete blogDb;
-  } catch (WServer::Exception& e) {
-    std::cerr << e.what() << std::endl;
-  } catch (std::exception &e) {
-    std::cerr << "exception: " << e.what() << std::endl;
+  }
+  catch (WServer::Exception& e) {
+    cerr << e.what() << std::endl;
+  }
+  catch (std::exception &e) {
+    cerr << "exception: " << e.what() << std::endl;
   }
 }
 
