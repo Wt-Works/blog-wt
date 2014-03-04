@@ -33,6 +33,14 @@ public:
         }
     }
 
+    void addApplication(Wt::ApplicationCreator callback,
+                        const std::string& path = std::string(),
+                                const std::string& favicon = std::string())
+    {
+        addEntryPoint(Wt::Application, callback, path);
+    }
+
+
 };
 
 }

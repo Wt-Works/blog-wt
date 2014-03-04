@@ -56,7 +56,7 @@ int main(int argc, char **argv)
     BlogRSSFeed rssFeed(*blogDb, "Wt blog example", "", "It's just an example.");
     server.addResource(&rssFeed, FeedUrl);
 
-    server.addEntryPoint(Application, boost::bind(&createApplication, _1, blogDb), BlogUrl);
+    server.addApplication(boost::bind(&createApplication, _1, blogDb), BlogUrl);
 
     cerr << "\n\n -- Warning: Example is deployed at '" << BlogUrl << "'\n\n";
 

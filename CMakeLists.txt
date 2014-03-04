@@ -1,8 +1,13 @@
 ## GENERAL ##
 
 cmake_minimum_required(VERSION 2.8)
-set(WT_INSTALL_DIR $ENV{WT_INSTALL_DIR}) #provide wt install directory in environment var
-#set(WT_INSTALL_DIR "/path/to/wt-install-dir") #alternatively, provide it here
+
+## WT SPECIFIC ##
+
+#provide wt install directory in environment var
+set(WT_INSTALL_DIR $ENV{WT_INSTALL_DIR})
+#alternatively, provide it here:
+#set(WT_INSTALL_DIR "/path/to/wt-install-dir")
 include_directories(${WT_INSTALL_DIR}/include)
 link_directories(${WT_INSTALL_DIR}/lib) 
 
