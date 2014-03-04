@@ -1,27 +1,47 @@
 Blog example
 ------------
 
-This is an example that implements a simple yet feature-complete blog.
-This is the blog that is used on [the Wt
-homepage](http://www.webtoolkit.eu/wt/blog).
+This Code is not only about a blog, but about C++, wt and a rework.
 
-Since this example is actually used in production code, the example is
-a bit more elaborate compared to other more simple examples.
+The main scope is to demonstrate two things:
+
+a) How simple it can be to develope web applications with C++
+b) The neccessity to rework existent libraries (here wt), in order to simplify them
+
+The code within blog-wt is taken from the wt examples. It is then refactored step by step to become simpler and self-teaching. During the rework, several issues are filed within the project, mostly subjecting simplifications of the API's (without breaking existent behaviour).
+
+The final goal is to reduce the entry barriers for any newcomers who like to adopt C++ & wt for their web development.
+
+
 
 How to run
 ----------
 
-See the README in the parent directory.
+Use cmake standard mechanisms to run.
+
+You can use qt creator to open the cmakefiles.txt
 
 The example itself will be deployed at '/blog', and the RSS feed at
 '/blog/feed'. A SQLite3 database will be created in the working
 directory if it didn't yet exist.
 
+
+
 What it illustrates
 -------------------
 
-- the use of `Wt::Dbo` to create a simple database-based model layer
-- how you can use these database objects inside View widgets
-- the use of `WTemplate` for recurisvely defining HTML-based views
-- the use `Wt::Auth` for authentication.
-- the use of a static `WResource` for an RSS feed
+C++
+
+- That C++ code can have beauty and simplicity, without loosing any power.
+- Web Applications which are fast.
+- Web Applications that fit in even the smallest devices.
+
+wt
+
+Standalone usage of an wt example
+
+- `Wt::Dbo`   to create a simple database-based model layer
+- `Widgets`   how you can use these database objects inside View widgets
+- `WTemplate` for recurisvely defining HTML-based views
+- `Wt::Auth`  for authentication (including google or other OAuth providers)
+- `WResource` for an RSS feed
