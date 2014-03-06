@@ -9,7 +9,7 @@
 
 #include "BlogRSSFeed.h"
 
-#include "model/BlogSession.h"
+#include "BlogSession.h"
 #include "model/User.h"
 #include "model/Post.h"
 #include "model/Comment.h"

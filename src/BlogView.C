@@ -4,17 +4,17 @@
  * See the LICENSE file for terms of use.
  */
 
-#include "PostView.h"
+#include "view/PostView.h"
 #include "BlogView.h"
-#include "EditUsers.h"
-#include "../auth/BlogLoginWidget.h"
+#include "view/EditUsers.h"
+#include "auth/BlogLoginWidget.h"
 
-#include "../model/BlogSession.h"
-#include "../model/Comment.h"
-#include "../model/Post.h"
-#include "../model/Tag.h"
-#include "../auth/Token.h"
-#include "../model/User.h"
+#include "BlogSession.h"
+#include "model/Comment.h"
+#include "model/Post.h"
+#include "model/Tag.h"
+#include "auth/Token.h"
+#include "model/User.h"
 
 #include <Wt/WAnchor>
 #include <Wt/WApplication>

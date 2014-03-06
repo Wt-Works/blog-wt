@@ -5,12 +5,12 @@
  */
 
 #include "BlogSession.h"
-#include "Comment.h"
-#include "Post.h"
-#include "Tag.h"
-#include "../auth/Token.h"
-#include "User.h"
-#include "../asciidoc/asciidoc.h"
+#include "model/Comment.h"
+#include "model/Post.h"
+#include "model/Tag.h"
+#include "auth/Token.h"
+#include "model/User.h"
+#include "asciidoc/asciidoc.h"
 
 #include <Wt/Auth/AuthService>
 #include <Wt/Auth/HashFunction>

@@ -10,7 +10,7 @@
 #include <Wt/Auth/PasswordService>
 #include <Wt/Auth/RegistrationWidget>
 #include "BlogLoginWidget.h"
-#include "../model/BlogSession.h"
+#include "..//BlogSession.h"
 #include "Token.h"
 #include "../model/User.h"
 

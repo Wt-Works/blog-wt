@@ -20,7 +20,7 @@ namespace Wt {
   }
 }
 
-#include "../auth/BlogUserDatabase.h"
+#include "auth/BlogUserDatabase.h"
 
 namespace dbo = Wt::Dbo;
 

@@ -8,10 +8,10 @@
 //#include <Wt/WServer>
 #include <Wt/Dbo/SqlConnectionPool>
 
-#include "model/BlogSession.h"
+#include "BlogSession.h"
 #include "auth/Token.h"
 #include "model/User.h"
-#include "view/BlogView.h"
+#include "BlogView.h"
 #include "BlogRSSFeed.h"
 
 #include "0/WServer.h"

@@ -6,7 +6,7 @@
 
 #include "CommentView.h"
 
-#include "../model/BlogSession.h"
+#include "../BlogSession.h"
 #include "../model/Comment.h"
 #include "../model/Tag.h"
 #include "../auth/Token.h"
