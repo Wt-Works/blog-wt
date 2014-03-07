@@ -10,7 +10,7 @@
 
 #include "BlogSession.h"
 #include "auth/Token.h"
-#include "model/User.h"
+#include "entity/User.h"
 #include "BlogView.h"
 #include "BlogRSSFeed.h"
 

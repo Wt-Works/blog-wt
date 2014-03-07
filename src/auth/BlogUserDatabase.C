@@ -8,7 +8,7 @@
 #include <Wt/Auth/Identity>
 
 #include "BlogUserDatabase.h"
-#include "../model/User.h"
+#include "../entity/User.h"
 #include "Token.h"
 
 using namespace Wt;

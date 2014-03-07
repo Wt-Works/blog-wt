@@ -10,10 +10,10 @@
 #include "BlogRSSFeed.h"
 
 #include "BlogSession.h"
-#include "model/User.h"
-#include "model/Post.h"
-#include "model/Comment.h"
-#include "model/Tag.h"
+#include "entity/User.h"
+#include "entity/Post.h"
+#include "entity/Comment.h"
+#include "entity/Tag.h"
 #include "auth/Token.h"
 
 namespace dbo = Wt::Dbo;

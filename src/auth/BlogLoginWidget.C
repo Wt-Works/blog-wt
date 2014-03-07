@@ -12,7 +12,7 @@
 #include "BlogLoginWidget.h"
 #include "..//BlogSession.h"
 #include "Token.h"
-#include "../model/User.h"
+#include "../entity/User.h"
 
 using namespace Wt;
 using Auth::AuthModel;

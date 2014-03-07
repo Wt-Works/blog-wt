@@ -1,10 +1,10 @@
 #ifndef EDIT_USERS_H_
 #define EDIT_USERS_H_
 
-#include "../model/User.h"
-#include "../model/Tag.h"
+#include "../entity/User.h"
+#include "../entity/Tag.h"
 #include "../auth/Token.h"
-#include "../model/Comment.h"
+#include "../entity/Comment.h"
 
 #include <Wt/Dbo/ptr>
 #include <Wt/WStackedWidget>

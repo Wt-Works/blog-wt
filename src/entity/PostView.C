@@ -9,10 +9,10 @@
 #include "../asciidoc/asciidoc.h"
 
 #include "../BlogSession.h"
-#include "../model/Comment.h"
-#include "../model/Tag.h"
+#include "../entity/Comment.h"
+#include "../entity/Tag.h"
 #include "../auth/Token.h"
-#include "../model/User.h"
+#include "../entity/User.h"
 
 #include <Wt/WAnchor>
 #include <Wt/WLineEdit>
