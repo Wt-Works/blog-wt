@@ -4,9 +4,9 @@
  * See the LICENSE file for terms of use.
  */
 
-#include "view/PostView.h"
+#include "model/PostView.h"
 #include "BlogView.h"
-#include "view/EditUsers.h"
+#include "model/EditUsers.h"
 #include "auth/BlogLoginWidget.h"
 
 #include "BlogSession.h"

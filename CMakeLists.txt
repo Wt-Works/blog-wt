@@ -4,10 +4,11 @@ cmake_minimum_required(VERSION 2.8)
 
 ## WT SPECIFIC ##
 
-#provide wt install directory in environment var
+#provide wt install directory in environment var or directly
 set(WT_INSTALL_DIR $ENV{WT_INSTALL_DIR})
-#alternatively, provide it here:
 #set(WT_INSTALL_DIR "/path/to/wt-install-dir")
+
+## library locations ##
 include_directories(${WT_INSTALL_DIR}/include)
 link_directories(${WT_INSTALL_DIR}/lib) 
 
@@ -19,7 +20,7 @@ PROJECT(BLOG)
 
 file(GLOB_RECURSE sources src/*.c*)
 file(GLOB_RECURSE headers src/*.h src/*.hpp) # optional, for use in generated IDE projects
-#file(GLOB divers *.*)
+file(GLOB divers *.*)
 
 ## TARGET ##
 

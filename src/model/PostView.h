@@ -10,7 +10,7 @@
 #include <Wt/WTemplate>
 #include <Wt/Dbo/ptr>
 
-#include "../model/Post.h"
+#include "Post.h"
 
 namespace Wt {
   class WText;
