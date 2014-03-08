@@ -15,18 +15,21 @@
 
 DBO_INSTANTIATE_TEMPLATES(Comment);
 
-namespace {
-  std::string& replace(std::string& s, const std::string& k,
-		       const std::string& r)
-  {
-    std::string::size_type p = 0;
+using std::string;
+using std::cout;
+using std::cerr;
 
-    while ((p = s.find(k, p)) != std::string::npos) {
-      s.replace(p, k.length(), r);
-      p += r.length();
+namespace {
+  string& replace(string& text, const string& key, const string& replacement)
+  {
+    string::size_type pos = 0;
+
+    while ((pos = text.find(key, pos)) != string::npos) {
+      text.replace(pos, key.length(), replacement);
+      pos += replacement.length();
     }
 
-    return s;
+    return text;
   }
 }
 
@@ -34,48 +37,67 @@ void Comment::setText(const Wt::WString& src)
 {
   textSrc_ = src;
 
-  std::string html = Wt::WWebWidget::escapeText(src, true).toUTF8();
+  string html = Wt::WWebWidget::escapeText(src, true).toUTF8();
 
-  std::string::size_type b = 0;
+  string::size_type posOpen = 0;
 
   // Replace &lt;code&gt;...&lt/code&gt; with <pre>...</pre>
   // This is kind of very ad-hoc!
 
-  while ((b = html.find("&lt;code&gt;", b)) != std::string::npos) {
-    std::string::size_type e = html.find("&lt;/code&gt;", b);
-    if (e == std::string::npos)
+  // <br />&lt;code&gt;<br />   <br />&lt;/code&gt;<br />
+  // 12345678901234567890123456789012345678901234567890123456789
+
+
+  while ((posOpen = html.find("&lt;code&gt;", posOpen)) != string::npos) {
+    string::size_type posClose = html.find("&lt;/code&gt;", posOpen);
+    if (posClose == string::npos)
       break;
     else {
-      if (b > 6 && html.substr(b - 6, 6) == "<br />") {
-	html.erase(b - 6, 6);
-	b -= 6;
-	e -= 6;
+      // erase the preceeding br tag, correct positions
+      if (posOpen > 6 && html.substr(posOpen - 6, 6) == "<br />") {
+        html.erase(posOpen - 6, 6);
+        posOpen -= 6;
+        posClose -= 6;
+        cerr << "br posOpen\n";
       }
 
-      html.replace(b, 12, "<pre>");
-      e -= 7;
+      // replace
+      html.replace(posOpen, 12, "<pre>");
+      posClose -= 7;
+      cerr << "posOpen\n";
 
-      if (html.substr(b + 5, 6) == "<br />") {
-	html.erase(b + 5, 6);
-	e -= 6;
+      // erase the following br tag, correct position
+      if (html.substr(posOpen + 5, 6) == "<br />") {
+        html.erase(posOpen + 5, 6);
+        posClose -= 6;
+        cerr << "posOpen br\n";
       }
 
-      if (html.substr(e - 6, 6) == "<br />") {
-	html.erase(e - 6, 6);
-	e -= 6;
+      // ease the preceeding br tag
+      if (html.substr(posClose - 6, 6) == "<br />") {
+        html.erase(posClose - 6, 6);
+        posClose -= 6;
+        cerr << "br posClose\n";
       }
 
-      html.replace(e, 13, "</pre>");
-      e += 6;
+      // replace
+      html.replace(posClose, 13, "</pre>");
+      posClose += 6;
+      cerr << "posClose\n";
 
-      if (e + 6 <= html.length() && html.substr(e, 6) == "<br />") {
-	html.erase(e, 6);
-	e -= 6;
+      // erase the following bt tag
+      if (posClose + 6 <= html.length() && html.substr(posClose, 6) == "<br />") {
+        html.erase(posClose, 6);
+        posClose -= 6;
+        cerr << "posClose br\n";
       }
 
-      b = e;
+      posOpen = posClose;
     }
   }
+
+  //replace(html, "&lt;code&gt;", "<pre>");
+  //replace(html, "&lt;/code&gt;", "</pre >");
 
   // We would also want to replace <br /><br /> (empty line) with
   // <div class="vspace"></div>
