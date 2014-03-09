@@ -40,12 +40,12 @@ class BlogApplication : public WApplication
 public:
   BlogApplication(const WEnvironment& env) : WApplication(env)
   {
-    root()->addWidget(new BlogView("/", *db, FEEDURL));
+    root()->addWidget(new BlogView("/", *db_, FEEDURL));
     useStyleSheet("css/blogexample.css");
   }
 
   // use a static method for any general/global resource allocation/initialization
-  static dbo::SqlConnectionPool *init(const std::string& sqliteDb)
+  static void init(const std::string& sqliteDb)
   {
     BlogSession::configureAuth();
 
@@ -56,8 +56,7 @@ public:
                                    dbo::backend::Sqlite3::PseudoISO8601AsText);
 
     // keep the db available to the class
-    db = new dbo::FixedSqlConnectionPool(connection, 10);
-    return db;
+    db_ = new dbo::FixedSqlConnectionPool(connection, 10);
   }
 
   // used by the server to create instances for each user
@@ -66,12 +65,15 @@ public:
     return new BlogApplication(env);
   }
 
+  static dbo::FixedSqlConnectionPool* db() {return db_;}
+  static void free() {delete db_;}
+
 private:
-  static dbo::FixedSqlConnectionPool* db;
+  static dbo::FixedSqlConnectionPool* db_;
 
 };
 
-dbo::FixedSqlConnectionPool* BlogApplication::db; // storage for private class variable
+dbo::FixedSqlConnectionPool* BlogApplication::db_; // storage for private class variable
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -80,15 +82,15 @@ int main(int argc, char **argv)
   try {
     WServer server(argc, argv, "./wthttpd");
 
-    Database *db = BlogApplication::init(server.appRoot() + "blog.db");
+    BlogApplication::init(server.appRoot() + "blog.db");
     server.addApplication(&BlogApplication::create, BLOGURL);
 
-    BlogRSSFeed rssFeed(*db, "Wt blog example", "", "It's just an example.");
+    BlogRSSFeed rssFeed(*BlogApplication::db(), "Wt blog example", "", "It's just an example.");
     server.addResource(&rssFeed, FEEDURL);
 
     server.run();
 
-    delete db;
+    BlogApplication::free();
   }
   catch (WServer::Exception& e) {
     cerr << e.what() << endl;
