@@ -17,6 +17,8 @@
 #include "0/WServer.h"
 
 using std::cerr;
+using std::endl;
+using boost::bind;
 
 using Wt::WApplication;
 using Wt::WEnvironment;
@@ -24,24 +26,24 @@ using Wt::Application;
 //using Wt::WServer;
 using Ma::WServer;
 
-using  Wt::Dbo::SqlConnectionPool;
+typedef Wt::Dbo::SqlConnectionPool Database;
 
-static const char *FeedUrl = "/blog/feed/";
-static const char *BlogUrl = "/blog";
+static const char *FEEDURL = "/blog/feed/";
+static const char *BLOGURL = "/blog";
 
 class BlogApplication : public WApplication
 {
 public:
-  BlogApplication(const WEnvironment& env, SqlConnectionPool& blogDb) : WApplication(env)
+  BlogApplication(const WEnvironment& env, Database& db) : WApplication(env)
   {
-    root()->addWidget(new BlogView("/", blogDb, FeedUrl));
+    root()->addWidget(new BlogView("/", db, FEEDURL));
     useStyleSheet("css/blogexample.css");
   }
 };
 
-WApplication *createApplication(const WEnvironment& env, SqlConnectionPool *blogDb)
+WApplication *create(const WEnvironment& env, Database *db)
 {
-  return new BlogApplication(env, *blogDb);
+  return new BlogApplication(env, *db);
 }
 
 int main(int argc, char **argv)
@@ -51,24 +53,24 @@ int main(int argc, char **argv)
 
     BlogSession::configureAuth();
 
-    SqlConnectionPool *blogDb = BlogSession::createConnectionPool(server.appRoot() + "blog.db");
+    Database *db = BlogSession::createConnectionPool(server.appRoot() + "blog.db");
 
-    BlogRSSFeed rssFeed(*blogDb, "Wt blog example", "", "It's just an example.");
-    server.addResource(&rssFeed, FeedUrl);
+    BlogRSSFeed rssFeed(*db, "Wt blog example", "", "It's just an example.");
+    server.addResource(&rssFeed, FEEDURL);
 
-    server.addApplication(boost::bind(&createApplication, _1, blogDb), BlogUrl);
+    server.addApplication(bind(&create, _1, db), BLOGURL);
 
-    cerr << "\n\n -- Warning: Example is deployed at '" << BlogUrl << "'\n\n";
+    cerr << "\n\n -- Warning: Example is deployed at '" << BLOGURL << "'\n\n";
 
     server.run();
 
-    delete blogDb;
+    delete db;
   }
   catch (WServer::Exception& e) {
-    cerr << e.what() << std::endl;
+    cerr << e.what() << endl;
   }
   catch (std::exception &e) {
-    cerr << "exception: " << e.what() << std::endl;
+    cerr << "exception: " << e.what() << endl;
   }
 }
 
