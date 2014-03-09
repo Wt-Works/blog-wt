@@ -15,7 +15,7 @@
 #include "BlogView.h"
 #include "BlogRSSFeed.h"
 
-#include "0/WServer.h"
+#include "0/WServer.h" // a slightly customized version of WServer
 
 using std::cerr;
 using std::endl;
@@ -27,37 +27,51 @@ using Wt::Application;
 //using Wt::WServer;
 using Ma::WServer;
 
-typedef Wt::Dbo::SqlConnectionPool Database;
+typedef Wt::Dbo::SqlConnectionPool Database; // just for simplicity
 namespace dbo = Wt::Dbo;
 
 static const char *FEEDURL = "/blog/feed/";
 static const char *BLOGURL = "/blog";
 
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
 class BlogApplication : public WApplication
 {
 public:
-  BlogApplication(const WEnvironment& env, Database& db) : WApplication(env)
+  BlogApplication(const WEnvironment& env) : WApplication(env)
   {
-    root()->addWidget(new BlogView("/", db, FEEDURL));
+    root()->addWidget(new BlogView("/", *db, FEEDURL));
     useStyleSheet("css/blogexample.css");
   }
 
+  // use a static method for any general/global resource allocation/initialization
   static dbo::SqlConnectionPool *createConnectionPool(const std::string& sqliteDb)
   {
     dbo::backend::Sqlite3 *connection = new dbo::backend::Sqlite3(sqliteDb);
 
     connection->setProperty("show-queries", "true");
-    connection->setDateTimeStorage(Wt::Dbo::SqlDateTime,
-                                   Wt::Dbo::backend::Sqlite3::PseudoISO8601AsText);
+    connection->setDateTimeStorage(dbo::SqlDateTime,
+                                   dbo::backend::Sqlite3::PseudoISO8601AsText);
 
-    return new dbo::FixedSqlConnectionPool(connection, 10);
+    // keep the db available to the class
+    db = new dbo::FixedSqlConnectionPool(connection, 10);
+    return db;
   }
+
+  // used by the server to create instances for each user
+  static WApplication *create(const WEnvironment& env)
+  {
+    return new BlogApplication(env);
+  }
+
+private:
+  static dbo::FixedSqlConnectionPool* db;
+
 };
 
-WApplication *create(const WEnvironment& env, Database *db)
-{
-  return new BlogApplication(env, *db);
-}
+dbo::FixedSqlConnectionPool* BlogApplication::db; // storage for private class variable
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 int main(int argc, char **argv)
 {
@@ -67,7 +81,7 @@ int main(int argc, char **argv)
     BlogSession::configureAuth();
 
     Database *db = BlogApplication::createConnectionPool(server.appRoot() + "blog.db");
-    server.addApplication(bind(&create, _1, db), BLOGURL);
+    server.addApplication(&BlogApplication::create, BLOGURL);
 
     BlogRSSFeed rssFeed(*db, "Wt blog example", "", "It's just an example.");
     server.addResource(&rssFeed, FEEDURL);
