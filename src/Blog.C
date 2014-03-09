@@ -7,6 +7,7 @@
 #include <Wt/WContainerWidget>
 //#include <Wt/WServer>
 #include <Wt/Dbo/SqlConnectionPool>
+#include <Wt/Dbo/FixedSqlConnectionPool>
 
 #include "BlogSession.h"
 #include "auth/Token.h"
@@ -27,6 +28,7 @@ using Wt::Application;
 using Ma::WServer;
 
 typedef Wt::Dbo::SqlConnectionPool Database;
+namespace dbo = Wt::Dbo;
 
 static const char *FEEDURL = "/blog/feed/";
 static const char *BLOGURL = "/blog";
@@ -38,6 +40,17 @@ public:
   {
     root()->addWidget(new BlogView("/", db, FEEDURL));
     useStyleSheet("css/blogexample.css");
+  }
+
+  static dbo::SqlConnectionPool *createConnectionPool(const std::string& sqliteDb)
+  {
+    dbo::backend::Sqlite3 *connection = new dbo::backend::Sqlite3(sqliteDb);
+
+    connection->setProperty("show-queries", "true");
+    connection->setDateTimeStorage(Wt::Dbo::SqlDateTime,
+                                   Wt::Dbo::backend::Sqlite3::PseudoISO8601AsText);
+
+    return new dbo::FixedSqlConnectionPool(connection, 10);
   }
 };
 
@@ -53,14 +66,11 @@ int main(int argc, char **argv)
 
     BlogSession::configureAuth();
 
-    Database *db = BlogSession::createConnectionPool(server.appRoot() + "blog.db");
+    Database *db = BlogApplication::createConnectionPool(server.appRoot() + "blog.db");
+    server.addApplication(bind(&create, _1, db), BLOGURL);
 
     BlogRSSFeed rssFeed(*db, "Wt blog example", "", "It's just an example.");
     server.addResource(&rssFeed, FEEDURL);
-
-    server.addApplication(bind(&create, _1, db), BLOGURL);
-
-    cerr << "\n\n -- Warning: Example is deployed at '" << BLOGURL << "'\n\n";
 
     server.run();
 

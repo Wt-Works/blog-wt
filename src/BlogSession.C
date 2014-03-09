@@ -20,8 +20,6 @@
 #include <Wt/Auth/PasswordVerifier>
 #include <Wt/Auth/GoogleService>
 
-#include <Wt/Dbo/FixedSqlConnectionPool>
-
 #ifndef WIN32
 #include <unistd.h>
 #endif
@@ -98,16 +96,6 @@ void BlogSession::configureAuth()
     blogOAuth.push_back(new Auth::GoogleService(blogAuth));
 }
 
-dbo::SqlConnectionPool *BlogSession::createConnectionPool(const std::string& sqliteDb)
-{
-  dbo::backend::Sqlite3 *connection = new dbo::backend::Sqlite3(sqliteDb);
-
-  connection->setProperty("show-queries", "true");
-  connection->setDateTimeStorage(Wt::Dbo::SqlDateTime,
-				 Wt::Dbo::backend::Sqlite3::PseudoISO8601AsText);
-
-  return new dbo::FixedSqlConnectionPool(connection, 10);
-}
 
 BlogSession::BlogSession(dbo::SqlConnectionPool& connectionPool)
   : connectionPool_(connectionPool),
