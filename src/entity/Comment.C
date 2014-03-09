@@ -16,7 +16,6 @@
 DBO_INSTANTIATE_TEMPLATES(Comment);
 
 using std::string;
-using std::cout;
 using std::cerr;
 
 namespace {
@@ -31,6 +30,16 @@ namespace {
 
     return text;
   }
+
+  string& replaceWithBr(string& text, const string& key, const string& replacement)
+  {
+    replace(text, "<br />" + key + "<br />", replacement);
+    replace(text, "<br />" + key,            replacement);
+    replace(text,            key + "<br />", replacement);
+    replace(text,            key,            replacement);
+
+    return text;
+  }
 }
 
 void Comment::setText(const Wt::WString& src)
@@ -39,68 +48,13 @@ void Comment::setText(const Wt::WString& src)
 
   string html = Wt::WWebWidget::escapeText(src, true).toUTF8();
 
-  string::size_type posOpen = 0;
-
   // Replace &lt;code&gt;...&lt/code&gt; with <pre>...</pre>
-  // This is kind of very ad-hoc!
+  // including leading/trailing <br />
 
-  // <br />&lt;code&gt;<br />   <br />&lt;/code&gt;<br />
-  // 12345678901234567890123456789012345678901234567890123456789
+  replaceWithBr(html, "&lt;code&gt;", "<pre>");
+  replaceWithBr(html, "&lt;/code&gt;", "</pre>");
 
-
-  while ((posOpen = html.find("&lt;code&gt;", posOpen)) != string::npos) {
-    string::size_type posClose = html.find("&lt;/code&gt;", posOpen);
-    if (posClose == string::npos)
-      break;
-    else {
-      // erase the preceeding br tag, correct positions
-      if (posOpen > 6 && html.substr(posOpen - 6, 6) == "<br />") {
-        html.erase(posOpen - 6, 6);
-        posOpen -= 6;
-        posClose -= 6;
-        cerr << "br posOpen\n";
-      }
-
-      // replace
-      html.replace(posOpen, 12, "<pre>");
-      posClose -= 7;
-      cerr << "posOpen\n";
-
-      // erase the following br tag, correct position
-      if (html.substr(posOpen + 5, 6) == "<br />") {
-        html.erase(posOpen + 5, 6);
-        posClose -= 6;
-        cerr << "posOpen br\n";
-      }
-
-      // ease the preceeding br tag
-      if (html.substr(posClose - 6, 6) == "<br />") {
-        html.erase(posClose - 6, 6);
-        posClose -= 6;
-        cerr << "br posClose\n";
-      }
-
-      // replace
-      html.replace(posClose, 13, "</pre>");
-      posClose += 6;
-      cerr << "posClose\n";
-
-      // erase the following bt tag
-      if (posClose + 6 <= html.length() && html.substr(posClose, 6) == "<br />") {
-        html.erase(posClose, 6);
-        posClose -= 6;
-        cerr << "posClose br\n";
-      }
-
-      posOpen = posClose;
-    }
-  }
-
-  //replace(html, "&lt;code&gt;", "<pre>");
-  //replace(html, "&lt;/code&gt;", "</pre >");
-
-  // We would also want to replace <br /><br /> (empty line) with
-  // <div class="vspace"></div>
+  // Replace empty line with <div class="vspace"></div>
   replace(html, "<br /><br />", "<div class=\"vspace\"></div>");
 
   textHtml_ = Wt::WString::fromUTF8(html);
