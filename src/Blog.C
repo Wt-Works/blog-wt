@@ -45,8 +45,10 @@ public:
   }
 
   // use a static method for any general/global resource allocation/initialization
-  static dbo::SqlConnectionPool *createConnectionPool(const std::string& sqliteDb)
+  static dbo::SqlConnectionPool *init(const std::string& sqliteDb)
   {
+    BlogSession::configureAuth();
+
     dbo::backend::Sqlite3 *connection = new dbo::backend::Sqlite3(sqliteDb);
 
     connection->setProperty("show-queries", "true");
@@ -78,9 +80,7 @@ int main(int argc, char **argv)
   try {
     WServer server(argc, argv, "./wthttpd");
 
-    BlogSession::configureAuth();
-
-    Database *db = BlogApplication::createConnectionPool(server.appRoot() + "blog.db");
+    Database *db = BlogApplication::init(server.appRoot() + "blog.db");
     server.addApplication(&BlogApplication::create, BLOGURL);
 
     BlogRSSFeed rssFeed(*db, "Wt blog example", "", "It's just an example.");
